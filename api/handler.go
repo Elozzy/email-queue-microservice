@@ -41,6 +41,15 @@ func HandleEmailRequest(q Queue) http.HandlerFunc {
 	}
 }
 
+func HandleDLQ(q *queue.EmailQueue) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		dlq := q.GetDLQ()
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(dlq)
+	}
+}
+
+
 func validateJob(job queue.EmailJob) error {
 	if job.To == "" || job.Subject == "" || job.Body == "" {
 		return errors.New("All fields are required")

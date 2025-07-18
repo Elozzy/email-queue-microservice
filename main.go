@@ -25,6 +25,8 @@ func main() {
 	emailQueue.StartWorkers(ctx)
 
 	http.HandleFunc("/send-email", api.HandleEmailRequest(emailQueue))
+	http.HandleFunc("/dlq", api.HandleDLQ(emailQueue))
+
 
 	server := &http.Server{Addr: ":8080"}
 
